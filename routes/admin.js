@@ -7,28 +7,29 @@ const uid2 = require("uid2");
 const User = require("../models/Users");
 
 //READ
+// {
+//     "_id": "5dfb6a3cf0994edf65cb0fd6",
+//     "token": "SJEgX7rtjG1w331jnjDm1hgD3hLPkFKUHnk3OlurzmB8VOR4RK11WNJrDmBWPrWp"
+// }
 router.post("/login", async (req, res) => {
-  if (!req.fields.email) {
-    return res.status(400).json({ message: " l'email est manquant" });
-  }
   if (!req.fields.password) {
     return res.status(400).json({ message: " le mot de passe est manquant" });
   }
   try {
-    const isKnownUser = await User.findOne({ email: req.fields.email });
-    if (!isKnownUser) {
+    const isUserExist = await User.findOne({ username: req.fields.username });
+    if (!isUserExist) {
       return res.status(400).json({ error: "utilisateur non trouvé" });
     }
-    const hash = SHA256(req.fields.password + isKnownUser.salt).toString(
+    const hash = SHA256(req.fields.password + isUserExist.salt).toString(
       encBase64
     );
-    if (hash === isKnownUser.hash) {
+    if (hash === isUserExist.hash) {
       return res.status(200).json({
-        _id: isKnownUser._id,
-        token: isKnownUser.token
+        _id: isUserExist._id,
+        token: isUserExist.token
       });
     } else {
-      return res.status(400).json({ error: "utilisateur non trouvé" });
+      return res.status(400).json({ error: "invalid password" });
     }
   } catch (error) {
     console.log(error.message);
@@ -36,16 +37,21 @@ router.post("/login", async (req, res) => {
   }
 });
 //CREATE
+// {
+//     "_id": "5dfb659d72ed25dd4940f98b",
+//     "token": "pPTH7ORMSyQRVTzV3UJ2sNxASjTZjICWuMvuV9EZqAaechHmZX0ekTud1slhUoyy",
+//     "account": "LeReacteur"
+// }
 router.post("/signup", async (req, res) => {
-  if (!req.fields.email) {
+  if (!req.fields.username) {
     return res.status(400).json({ message: " l'email est manquant" });
   }
   if (!req.fields.password) {
     return res.status(400).json({ message: " le mot de passe est manquant" });
   }
   try {
-    const isKnownUser = await User.findOne({ email: req.fields.email });
-    if (isKnownUser) {
+    const isUserExist = await User.findOne({ email: req.fields.username });
+    if (isUserExist) {
       return res.status(400).json({ error: " utilisateur déjà existant " });
     }
 
@@ -53,19 +59,19 @@ router.post("/signup", async (req, res) => {
     const salt = uid2(64);
     const hash = SHA256(req.fields.password + salt).toString(encBase64);
     const user = new User({
-      email: req.fields.email,
+      username: req.fields.username,
       token,
       salt,
       hash
     });
-    user.save(function(err) {
+    user.save(err => {
       if (err) {
         return next(err.message);
       } else {
         return res.json({
           _id: user._id,
           token: user.token,
-          account: user.account
+          account: user.username
         });
       }
     });
