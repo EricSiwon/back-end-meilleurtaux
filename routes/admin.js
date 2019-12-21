@@ -8,8 +8,8 @@ const User = require("../models/Users");
 
 //READ
 // {
-//     "_id": "5dfb6a3cf0994edf65cb0fd6",
-//     "token": "SJEgX7rtjG1w331jnjDm1hgD3hLPkFKUHnk3OlurzmB8VOR4RK11WNJrDmBWPrWp"
+//     "_id": "5dfb6a3......f65cb0fd6",
+//     "token": "SJEgX7rtjG1......B8VOR4RK11WNJrDmBWPrWp"
 // }
 router.post("/login", async (req, res) => {
   if (!req.fields.password) {
@@ -38,13 +38,13 @@ router.post("/login", async (req, res) => {
 });
 //CREATE
 // {
-//     "_id": "5dfb659d72ed25dd4940f98b",
-//     "token": "pPTH7ORMSyQRVTzV3UJ2sNxASjTZjICWuMvuV9EZqAaechHmZX0ekTud1slhUoyy",
-//     "account": "LeReacteur"
+//     "_id": "5dfb659d7......4940f98b",
+//     "token": "pPTH7ORMSyQRVTzV3UJ2s.....vuV9EZqAaechHmZX0ekTud1slhUoyy",
+//     "account": "L......r"
 // }
 router.post("/signup", async (req, res) => {
   if (!req.fields.username) {
-    return res.status(400).json({ message: " l'email est manquant" });
+    return res.status(400).json({ message: " username est manquant" });
   }
   if (!req.fields.password) {
     return res.status(400).json({ message: " le mot de passe est manquant" });
