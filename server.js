@@ -9,7 +9,7 @@ const app = express();
 app.use(formidable());
 
 app.use(cors());
-console.log('MongoDB:",process.env.MONGODB_URI)
+console.log('MongoDB:',process.env.MONGODB_URI)
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useCreateIndex: true,
