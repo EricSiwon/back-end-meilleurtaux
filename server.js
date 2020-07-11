@@ -15,7 +15,9 @@ mongoose.connect(process.env.MONGODB_URI, {
   useCreateIndex: true,
   useUnifiedTopology: true
 });
-
+mongoose.connection.on('connected', () => {
+    console.log('Mongoose is connected!!!!');
+});
 //Loading mongoDB model
 // require("./models/Devis");
 // require("./models/Users");
